@@ -88,9 +88,9 @@ async function sendReaderName(name) {
   // ║  e.g., "yourname@gmail.com"                             ║
   // ║  First submission will ask you to verify your email.    ║
   // ╚══════════════════════════════════════════════════════════╝
-  const EMAIL = 'YOUR_EMAIL_HERE';
+  const EMAIL = 'fundeaditya97@gmail.com';
 
-  if (EMAIL === 'YOUR_EMAIL_HERE') {
+  if (EMAIL === 'fundeaditya97@gmail.com') {
     console.info('[Friction] FormSubmit not configured. Add your email in assets/js/app.js');
     return;
   }

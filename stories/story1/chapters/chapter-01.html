@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <!-- ✏️ EDIT: Update title with your story + chapter name -->
+  <title>Chapter 1: The Beginning — Story Title One</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;0,700;1,300;1,400;1,600&family=Crimson+Pro:ital,wght@0,300;0,400;0,600;1,300;1,400&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../../../assets/css/style.css">
+</head>
+<body>
+
+  <!-- READING PROGRESS BAR (fills as you scroll) -->
+  <div class="reading-bar" id="readingBar"></div>
+
+
+  <!-- ══════════════════════════════════════════════════════
+       CHAPTER NAVIGATION BAR (sticky top bar)
+       ══════════════════════════════════════════════════════ -->
+  <nav class="chapter-nav" aria-label="Chapter navigation">
+    <a href="../index.html" class="chapter-nav-home">← Chapter List</a>
+
+    <!-- ✏️ EDIT: Update with story name + chapter name -->
+    <div class="chapter-nav-title">Story Title One &nbsp;·&nbsp; Chapter One</div>
+
+    <div class="chapter-nav-pages">
+      <!-- Previous / Next handled by JavaScript below -->
+      <a id="prevChapterBtn" href="#" class="nav-btn">← Prev</a>
+      <a id="nextChapterBtn" href="#" class="nav-btn">Next →</a>
+    </div>
+  </nav>
+
+
+  <!-- ══════════════════════════════════════════════════════
+       CHAPTER COVER IMAGE (optional per chapter)
+       ══════════════════════════════════════════════════════ -->
+  <div class="chapter-cover">
+    <!--
+    ╔══════════════════════════════════════════════════════════╗
+    ║  HOW TO ADD A COVER IMAGE FOR THIS CHAPTER:              ║
+    ║  1. Save your image as:                                  ║
+    ║     assets/images/chapter-s1-ch01.jpg                   ║
+    ║     (recommended: 1200×500px landscape)                  ║
+    ║  2. That's it! The image will appear here.               ║
+    ║  If you don't add one, a placeholder text shows instead. ║
+    ╚══════════════════════════════════════════════════════════╝
+    -->
+    <img
+      src="../../../assets/images/chapter-s1-ch01.jpg"
+      alt="Chapter 1 cover illustration"
+      onerror="this.parentElement.classList.add('no-image'); this.style.display='none'; this.nextElementSibling.style.display='none'; this.parentElement.innerHTML = '<div class=\'chapter-cover-placeholder\'>Chapter One</div>';"
+    >
+    <div class="chapter-cover-overlay"></div>
+  </div>
+
+
+  <!-- ══════════════════════════════════════════════════════
+       CHAPTER CONTENT
+       ══════════════════════════════════════════════════════ -->
+  <article class="chapter-container">
+
+    <header class="chapter-header">
+      <!-- ✏️ EDIT: Your story name -->
+      <p class="chapter-story-name">Story Title One</p>
+      <p class="chapter-number">Chapter One</p>
+      <!-- ✏️ EDIT: Your chapter title -->
+      <h1 class="chapter-heading">The Beginning</h1>
+    </header>
+
+
+    <!-- ══════════════════════════════════════════════════
+         YOUR CHAPTER TEXT GOES BELOW
+         • Each paragraph goes inside <p> ... </p> tags
+         • To add a section break use: <div class="chapter-separator">✦</div>
+         • To add a sub-heading use: <h2>Sub Heading</h2>
+         • For a quote/thought: <blockquote>text here</blockquote>
+         ══════════════════════════════════════════════════ -->
+    <div class="chapter-body">
+
+      <!-- ✏️ REPLACE THIS with your actual chapter content -->
+      <p>
+        This is where your chapter begins. Replace this placeholder text with your actual
+        story content. Each paragraph should be wrapped in <code>&lt;p&gt;</code> tags like this one.
+        The first letter of the first paragraph will be automatically styled as a large decorative
+        drop cap — a classic literary touch.
+      </p>
+
+      <p>
+        Continue your story here. Add as many paragraphs as you need. The text will be
+        beautifully formatted with generous line spacing for comfortable reading on any screen.
+      </p>
+
+      <!-- Example of a section break — use between scenes -->
+      <div class="chapter-separator">✦ &nbsp; ✦ &nbsp; ✦</div>
+
+      <p>
+        After a scene break, your story continues. This is where a new scene or shift
+        in time/perspective might begin. Keep writing — this is your space.
+      </p>
+
+      <p>
+        Another paragraph of your story. The dark background, warm text color, and
+        elegant typography are designed to create an immersive reading experience,
+        as if the reader is holding a book in a dimly lit room.
+      </p>
+
+      <!-- Example of a quote / character thought -->
+      <blockquote>
+        "This is how you format dialogue or a character's inner thought — in a blockquote for emphasis."
+      </blockquote>
+
+      <p>
+        Continue your narrative after the quote. This is the end of the placeholder content.
+        Delete everything from the first &lt;p&gt; tag above down to this line and replace
+        it with your real chapter.
+      </p>
+      <!-- ✏️ END OF PLACEHOLDER — write your story above this line -->
+
+    </div><!-- /chapter-body -->
+
+
+    <!-- ══════════════════════════════════════════════════
+         BOTTOM NAVIGATION
+         (Prev / Back to list / Next)
+         ══════════════════════════════════════════════════ -->
+    <nav class="chapter-end-nav" aria-label="Chapter end navigation">
+
+      <div class="end-nav-btn prev">
+        <span class="end-nav-label">Previous</span>
+        <!-- JS will disable this on Chapter 1 (no prev) -->
+        <a id="prevChapterBtnEnd" href="#" class="end-nav-title">← Prev Chapter</a>
+      </div>
+
+      <a href="../index.html" class="end-nav-center" title="Back to chapter list">☰</a>
+
+      <div class="end-nav-btn next">
+        <span class="end-nav-label">Next</span>
+        <!-- ✏️ When Chapter 2 exists, JS uses the URL from config below -->
+        <a id="nextChapterBtnEnd" href="#" class="end-nav-title">Next Chapter →</a>
+      </div>
+
+    </nav>
+
+  </article>
+
+
+  <footer class="site-footer">
+    <p>
+      <a href="../index.html">Story Title One</a>
+      &nbsp;·&nbsp;
+      <a href="../../../index.html">World of Friction</a>
+    </p>
+  </footer>
+
+  <script src="../../../assets/js/app.js"></script>
+  <script>
+    /*
+    ╔═══════════════════════════════════════════════════════╗
+    ║  CHAPTER CONFIG — Edit these values for each chapter  ║
+    ╠═══════════════════════════════════════════════════════╣
+    ║  storyId      → must match data-story-id in index.html║
+    ║  chapterNum   → chapter number (1, 2, 3 …)            ║
+    ║  chapterTitle → used in "Continue Reading" display    ║
+    ║  chapterUrl   → path back to THIS file (from root)    ║
+    ║  prevUrl      → path to previous chapter (or null)    ║
+    ║  nextUrl      → path to next chapter (or null)        ║
+    ╚═══════════════════════════════════════════════════════╝
+    */
+    document.addEventListener('DOMContentLoaded', () => {
+      initChapterPage({
+        storyId:      'story1',
+        chapterNum:   1,
+        chapterTitle: 'Chapter 1: The Beginning',
+        chapterUrl:   'stories/story1/chapters/chapter-01.html',
+        prevUrl:      null,                                    // No previous (first chapter)
+        nextUrl:      null,                                    // ✏️ Change to 'chapter-02.html' when ch.2 exists
+        totalChapters: 1                                       // ✏️ Update as you add chapters
+      });
+    });
+  </script>
+</body>
+</html>

@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <!-- ✏️ EDIT -->
+  <title>Chapter 1: First Light — Story Title Two</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;0,700;1,300;1,400;1,600&family=Crimson+Pro:ital,wght@0,300;0,400;0,600;1,300;1,400&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../../../assets/css/style.css">
+</head>
+<body>
+
+  <div class="reading-bar" id="readingBar"></div>
+
+  <nav class="chapter-nav">
+    <a href="../index.html" class="chapter-nav-home">← Chapter List</a>
+    <!-- ✏️ EDIT -->
+    <div class="chapter-nav-title">Story Title Two &nbsp;·&nbsp; Chapter One</div>
+    <div class="chapter-nav-pages">
+      <a id="prevChapterBtn" href="#" class="nav-btn">← Prev</a>
+      <a id="nextChapterBtn" href="#" class="nav-btn">Next →</a>
+    </div>
+  </nav>
+
+  <div class="chapter-cover">
+    <!--
+    ╔══════════════════════════════════════════════════════════╗
+    ║  ADD CHAPTER COVER: Save image as                        ║
+    ║  assets/images/chapter-s2-ch01.jpg                       ║
+    ╚══════════════════════════════════════════════════════════╝
+    -->
+    <img
+      src="../../../assets/images/chapter-s2-ch01.jpg"
+      alt="Chapter 1 cover"
+      onerror="this.parentElement.innerHTML = '<div class=\'chapter-cover-placeholder\'>Chapter One</div>';"
+    >
+    <div class="chapter-cover-overlay"></div>
+  </div>
+
+  <article class="chapter-container">
+
+    <header class="chapter-header">
+      <!-- ✏️ EDIT -->
+      <p class="chapter-story-name">Story Title Two</p>
+      <p class="chapter-number">Chapter One</p>
+      <h1 class="chapter-heading">First Light</h1>
+    </header>
+
+    <div class="chapter-body">
+
+      <!-- ✏️ REPLACE WITH YOUR CHAPTER 1 CONTENT -->
+      <p>
+        Your story two begins here. Replace this placeholder with your actual chapter content.
+        The first letter of this first paragraph will become a beautiful drop cap automatically.
+      </p>
+
+      <p>
+        Continue writing your story here, paragraph by paragraph, each inside
+        its own <code>&lt;p&gt;</code> tags.
+      </p>
+
+      <div class="chapter-separator">✦ &nbsp; ✦ &nbsp; ✦</div>
+
+      <p>
+        Scene break above — continue your story below the break here.
+        Delete all placeholder text and write your real chapter.
+      </p>
+      <!-- ✏️ END OF PLACEHOLDER -->
+
+    </div>
+
+    <nav class="chapter-end-nav">
+      <div class="end-nav-btn prev">
+        <span class="end-nav-label">Previous</span>
+        <a id="prevChapterBtnEnd" href="#" class="end-nav-title">← Prev Chapter</a>
+      </div>
+      <a href="../index.html" class="end-nav-center" title="Chapter list">☰</a>
+      <div class="end-nav-btn next">
+        <span class="end-nav-label">Next</span>
+        <a id="nextChapterBtnEnd" href="#" class="end-nav-title">Next Chapter →</a>
+      </div>
+    </nav>
+
+  </article>
+
+  <footer class="site-footer">
+    <p>
+      <a href="../index.html">Story Title Two</a>
+      &nbsp;·&nbsp;
+      <a href="../../../index.html">World of Friction</a>
+    </p>
+  </footer>
+
+  <script src="../../../assets/js/app.js"></script>
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      initChapterPage({
+        storyId:      'story2',
+        chapterNum:   1,
+        chapterTitle: 'Chapter 1: First Light',
+        chapterUrl:   'stories/story2/chapters/chapter-01.html',
+        prevUrl:      null,
+        nextUrl:      null,        // ✏️ Set to 'chapter-02.html' when ch.2 is ready
+        totalChapters: 1
+      });
+    });
+  </script>
+</body>
+</html>

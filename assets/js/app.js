@@ -95,7 +95,7 @@ async function sendReaderName(name) {
   const ACCESS_KEY = 'a1e1f5d2-e4ee-46c2-aaea-67bafeb0a7f7';
   // └─────────────────────────────────────────────────────┘
 
-  if (ACCESS_KEY === 'a1e1f5d2-e4ee-46c2-aaea-67bafeb0a7f7') {
+  if (ACCESS_KEY === 'YOUR_ACCESS_KEY_HERE') {
     console.info('[Friction] Web3Forms not configured yet. Get your free key at https://web3forms.com and paste it into assets/js/app.js');
     return;
   }

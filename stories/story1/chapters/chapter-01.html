@@ -3,152 +3,136 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <!-- ✏️ EDIT: Update title with your story + chapter name -->
-  <title>Chapter 1: The Beginning — Story Title One</title>
+
+  <title>Prologue — Entering a Whole New World</title>
+
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;0,700;1,300;1,400;1,600&family=Crimson+Pro:ital,wght@0,300;0,400;0,600;1,300;1,400&display=swap" rel="stylesheet">
+
   <link rel="stylesheet" href="../../../assets/css/style.css">
 </head>
 <body>
 
-  <!-- READING PROGRESS BAR (fills as you scroll) -->
+  <!-- Reading progress bar -->
   <div class="reading-bar" id="readingBar"></div>
 
-
-  <!-- ══════════════════════════════════════════════════════
-       CHAPTER NAVIGATION BAR (sticky top bar)
-       ══════════════════════════════════════════════════════ -->
-  <nav class="chapter-nav" aria-label="Chapter navigation">
+  <!-- ── TOP NAV BAR ── -->
+  <nav class="chapter-nav">
     <a href="../index.html" class="chapter-nav-home">← Chapter List</a>
 
-    <!-- ✏️ EDIT: Update with story name + chapter name -->
-    <div class="chapter-nav-title">Story Title One &nbsp;·&nbsp; Chapter One</div>
+    <div class="chapter-nav-title">Entering a Whole New World &nbsp;·&nbsp; Prologue</div>
 
     <div class="chapter-nav-pages">
-      <!-- Previous / Next handled by JavaScript below -->
       <a id="prevChapterBtn" href="#" class="nav-btn">← Prev</a>
       <a id="nextChapterBtn" href="#" class="nav-btn">Next →</a>
     </div>
   </nav>
 
 
-  <!-- ══════════════════════════════════════════════════════
-       CHAPTER COVER IMAGE (optional per chapter)
-       ══════════════════════════════════════════════════════ -->
+  <!-- ── CHAPTER COVER IMAGE (optional) ── -->
   <div class="chapter-cover">
-    <!--
-    ╔══════════════════════════════════════════════════════════╗
-    ║  HOW TO ADD A COVER IMAGE FOR THIS CHAPTER:              ║
-    ║  1. Save your image as:                                  ║
-    ║     assets/images/chapter-s1-ch01.jpg                   ║
-    ║     (recommended: 1200×500px landscape)                  ║
-    ║  2. That's it! The image will appear here.               ║
-    ║  If you don't add one, a placeholder text shows instead. ║
-    ╚══════════════════════════════════════════════════════════╝
-    -->
     <img
       src="../../../assets/images/chapter-s1-ch01.jpg"
-      alt="Chapter 1 cover illustration"
-      onerror="this.parentElement.classList.add('no-image'); this.style.display='none'; this.nextElementSibling.style.display='none'; this.parentElement.innerHTML = '<div class=\'chapter-cover-placeholder\'>Chapter One</div>';"
+      alt="Chapter cover"
+      onerror="this.parentElement.innerHTML = '<div class=\'chapter-cover-placeholder\'>Prologue</div>';"
     >
     <div class="chapter-cover-overlay"></div>
   </div>
 
 
-  <!-- ══════════════════════════════════════════════════════
-       CHAPTER CONTENT
-       ══════════════════════════════════════════════════════ -->
+  <!-- ── CHAPTER CONTENT ── -->
   <article class="chapter-container">
 
     <header class="chapter-header">
-      <!-- ✏️ EDIT: Your story name -->
-      <p class="chapter-story-name">Story Title One</p>
-      <p class="chapter-number">Chapter One</p>
-      <!-- ✏️ EDIT: Your chapter title -->
-      <h1 class="chapter-heading">The Beginning</h1>
+      <p class="chapter-story-name">Entering a Whole New World</p>
+      <p class="chapter-number">Prologue</p>
+      <h1 class="chapter-heading">A Whole New World</h1>
     </header>
 
-
-    <!-- ══════════════════════════════════════════════════
-         YOUR CHAPTER TEXT GOES BELOW
-         • Each paragraph goes inside <p> ... </p> tags
-         • To add a section break use: <div class="chapter-separator">✦</div>
-         • To add a sub-heading use: <h2>Sub Heading</h2>
-         • For a quote/thought: <blockquote>text here</blockquote>
-         ══════════════════════════════════════════════════ -->
     <div class="chapter-body">
 
-      <!-- ✏️ REPLACE THIS with your actual chapter content -->
-      <p>
-        This is where your chapter begins. Replace this placeholder text with your actual
-        story content. Each paragraph should be wrapped in <code>&lt;p&gt;</code> tags like this one.
-        The first letter of the first paragraph will be automatically styled as a large decorative
-        drop cap — a classic literary touch.
-      </p>
+      <p>Somewhere across the city, something was on fire.</p>
 
-      <p>
-        Continue your story here. Add as many paragraphs as you need. The text will be
-        beautifully formatted with generous line spacing for comfortable reading on any screen.
-      </p>
+      <p>Not everything — not the way disasters look in movies, where the whole skyline becomes one wall of flame. It was more scattered than that. Pockets of orange glow reflected off low clouds. Smoke rose in three or four columns from different directions, lazy and dark against the night. The sounds were worse than the sight — distant crashes, something shattering, the low hum of chaos that meant whatever was happening down there hadn't finished yet.</p>
 
-      <!-- Example of a section break — use between scenes -->
-      <div class="chapter-separator">✦ &nbsp; ✦ &nbsp; ✦</div>
+      <p>I stood at the rooftop's edge with both hands deep in my pants pockets, the torn fabric of my clothes still carrying the smell of wherever we'd just come from, and looked up.</p>
 
-      <p>
-        After a scene break, your story continues. This is where a new scene or shift
-        in time/perspective might begin. Keep writing — this is your space.
-      </p>
+      <p>Habit.</p>
 
-      <p>
-        Another paragraph of your story. The dark background, warm text color, and
-        elegant typography are designed to create an immersive reading experience,
-        as if the reader is holding a book in a dimly lit room.
-      </p>
+      <p>When everything around me was going wrong, I looked up. The clouds had that orange tint from the scattered fires below — but they were still just clouds. Still just the sky. There was something grounding about that.</p>
 
-      <!-- Example of a quote / character thought -->
-      <blockquote>
-        "This is how you format dialogue or a character's inner thought — in a blockquote for emphasis."
-      </blockquote>
+      <p>My thumb found the locket beneath my collar without me thinking about it. I felt the shape of it through the fabric — silver, small, barely larger than the tip of a water bottle, with a strange stone set in its centre. I always found myself reaching for it when I needed to think clearly.</p>
 
-      <p>
-        Continue your narrative after the quote. This is the end of the placeholder content.
-        Delete everything from the first &lt;p&gt; tag above down to this line and replace
-        it with your real chapter.
-      </p>
-      <!-- ✏️ END OF PLACEHOLDER — write your story above this line -->
+      <p>I needed to think clearly.</p>
+
+      <p>Behind me, a groan.</p>
+
+      <p>I turned.</p>
+
+      <p>Satoshi was stirring on the rooftop gravel, and even half-unconscious and crumpled on the ground, he looked exactly like himself — messy black hair splayed out in every direction like it had never once in its life agreed to cooperate, his torn shirt twisted across an athletic frame that hadn't quite filled out yet but already showed the shape of what it was going to be. His jaw was set the way it always was when he was in pain but refusing to show it. And then his eyes opened, and there it was — that spark. Even now, dazed and blinking in the firelight, there was something behind his eyes that couldn't be put out. Like electricity looking for somewhere to go.</p>
+
+      <p>Something loosened in my chest.</p>
+
+      <p>"Thank God," I murmured. Then louder: "Thank God you're awake. I thought you got hit by the Thing back there. Guess it was just an illusion."</p>
+
+      <p>Satoshi blinked. His eyes moved across the sky, across the rooftop surface, then settled on my face.</p>
+
+      <p>He stared.</p>
+
+      <p>"...Do I know you?" Low. Rough.</p>
+
+      <p>My expression didn't move. "What?"</p>
+
+      <p>"Do I know you?" Louder this time. Sitting up straighter, studying me with no recognition at all — not a flicker of it.</p>
+
+      <p>The weight dropped into my chest. I knew that weight.</p>
+
+      <p>Of course, I thought. Of course it happened to him too.</p>
+
+      <p>A second groan from near the door.</p>
+
+      <p>Gotam was pushing himself upright against the rooftop wall. He was smaller than Satoshi — twelve years old, lean and slightly built, his tanned skin smudged with dirt and ash. His clothes were more torn than ours, hanging off him in a way that suggested the battle we'd come from had been less kind to him. He didn't look weak — that wasn't it. He looked like someone still figuring out what his body was going to be, still a chapter or two behind the story. His forehead caught the light when he tilted his head, and his eyes — sharp, analytical, always reading something even when there was nothing to read — moved from me to Satoshi and back with the practiced speed of someone who never stopped taking inventory of a room.</p>
+
+      <p>No glasses. People always assumed, but no.</p>
+
+      <p>"Where am I?" he said. Then, blinking: "Who are you two?"</p>
+
+      <p>I closed my eyes for just a moment.</p>
+
+      <p>Here we go again.</p>
+
+      <p>I knew how we'd gotten here. Every detail of it — the wormhole opening, the pull, the fall, landing hard on this rooftop in the dark. I remembered all of it. They didn't. And that gap — between what I knew and what they had — was something I'd have to manage carefully.</p>
+
+      <p>"Okay," I said, keeping my voice steady. "I know you're both confused. Trust me — I've been through exactly this before. New world. No memories." I turned toward the city and gestured out at it. "But first — look."</p>
+
+      <p>They stood. Slowly. And they looked.</p>
+
+      <p>The streets below were not empty. But whatever moved through them didn't move like people. It shambled. It lurched. It hunted.</p>
+
+      <p>The city was full of zombies.</p>
 
     </div><!-- /chapter-body -->
 
 
-    <!-- ══════════════════════════════════════════════════
-         BOTTOM NAVIGATION
-         (Prev / Back to list / Next)
-         ══════════════════════════════════════════════════ -->
-    <nav class="chapter-end-nav" aria-label="Chapter end navigation">
-
+    <!-- ── BOTTOM NAVIGATION ── -->
+    <nav class="chapter-end-nav">
       <div class="end-nav-btn prev">
         <span class="end-nav-label">Previous</span>
-        <!-- JS will disable this on Chapter 1 (no prev) -->
         <a id="prevChapterBtnEnd" href="#" class="end-nav-title">← Prev Chapter</a>
       </div>
-
-      <a href="../index.html" class="end-nav-center" title="Back to chapter list">☰</a>
-
+      <a href="../index.html" class="end-nav-center" title="Chapter list">☰</a>
       <div class="end-nav-btn next">
         <span class="end-nav-label">Next</span>
-        <!-- ✏️ When Chapter 2 exists, JS uses the URL from config below -->
         <a id="nextChapterBtnEnd" href="#" class="end-nav-title">Next Chapter →</a>
       </div>
-
     </nav>
 
   </article>
 
-
   <footer class="site-footer">
     <p>
-      <a href="../index.html">Story Title One</a>
+      <a href="../index.html">Entering a Whole New World</a>
       &nbsp;·&nbsp;
       <a href="../../../index.html">World of Friction</a>
     </p>
@@ -156,27 +140,15 @@
 
   <script src="../../../assets/js/app.js"></script>
   <script>
-    /*
-    ╔═══════════════════════════════════════════════════════╗
-    ║  CHAPTER CONFIG — Edit these values for each chapter  ║
-    ╠═══════════════════════════════════════════════════════╣
-    ║  storyId      → must match data-story-id in index.html║
-    ║  chapterNum   → chapter number (1, 2, 3 …)            ║
-    ║  chapterTitle → used in "Continue Reading" display    ║
-    ║  chapterUrl   → path back to THIS file (from root)    ║
-    ║  prevUrl      → path to previous chapter (or null)    ║
-    ║  nextUrl      → path to next chapter (or null)        ║
-    ╚═══════════════════════════════════════════════════════╝
-    */
     document.addEventListener('DOMContentLoaded', () => {
       initChapterPage({
-        storyId:      'story1',
-        chapterNum:   1,
-        chapterTitle: 'Chapter 1: The Beginning',
-        chapterUrl:   'stories/story1/chapters/chapter-01.html',
-        prevUrl:      null,                                    // No previous (first chapter)
-        nextUrl:      null,                                    // ✏️ Change to 'chapter-02.html' when ch.2 exists
-        totalChapters: 1                                       // ✏️ Update as you add chapters
+        storyId: 'story1',
+        chapterNum: 1,
+        chapterTitle: 'Prologue',
+        chapterUrl: 'stories/story1/chapters/chapter-01.html',
+        prevUrl: null,
+        nextUrl: 'chapter-02.html',
+        totalChapters: 4
       });
     });
   </script>

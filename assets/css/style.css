@@ -1,0 +1,1301 @@
+/* ═══════════════════════════════════════════════════════════
+   WORLD OF FRICTION — MAIN STYLESHEET
+   Dark Literary / Noir Aesthetic
+   ═══════════════════════════════════════════════════════════
+   ✏️  DESIGN TOKENS — CHANGE THE WHOLE SITE'S LOOK FROM HERE
+   Every color, font, and spacing value the site uses is
+   defined once below in :root. Change a value here and it
+   updates everywhere automatically — you never need to hunt
+   through the file for individual colors.
+   ═══════════════════════════════════════════════════════════ */
+
+@import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;0,700;1,300;1,400;1,600&family=Crimson+Pro:ital,wght@0,300;0,400;0,600;1,300;1,400&family=Cinzel:wght@400;600&display=swap');
+
+/* ── CUSTOM PROPERTIES ── */
+:root {
+  /* Backgrounds — darkest to lightest */
+  --bg:           #08070A;  /* ✏️ page background */
+  --bg-card:      #10090F;  /* ✏️ book cards, chapter rows */
+  --bg-elevated:  #1A1220;  /* ✏️ hover states, modal box */
+  --bg-modal:     rgba(8, 7, 10, 0.96);
+
+  /* Text — kept to WCAG AA contrast (4.5:1+) against --bg so the
+     prose stays comfortably readable for long chapters */
+  --text:         #EDE0CC;  /* ✏️ main reading text — 15.4:1 */
+  --text-muted:   #8D8377;  /* ✏️ descriptions, subtitles — 5.4:1 */
+  --text-dim:     #89847D;  /* ✏️ small labels/eyebrows — 5.4:1 */
+
+  /* Gold accent — the site's signature color */
+  --gold:         #C8A84B;  /* ✏️ links, buttons, highlights */
+  --gold-light:   #E4C87A;  /* ✏️ hover/brighter state of gold */
+  --gold-dim:     #948253;  /* ✏️ muted gold for borders + small labels */
+
+  /* Crimson — used sparingly for dramatic accents (badges, dividers) */
+  --crimson:      #9B1C2E;
+  --crimson-soft: #C4203A;
+
+  --border:       #221A2A;
+  --border-gold:  rgba(200, 168, 75, 0.3);
+
+  /* Fonts — pair a display serif with a reading serif + a small
+     engraved-caps accent for labels ("GENRE", "STATUS", eyebrows) */
+  --font-display: 'Cormorant Garamond', 'Palatino Linotype', Georgia, serif;   /* ✏️ headings */
+  --font-body:    'Crimson Pro', 'Palatino Linotype', Georgia, serif;          /* ✏️ chapter prose */
+  --font-label:   'Cinzel', var(--font-display);                              /* ✏️ small uppercase labels */
+
+  --radius:       4px;
+  --glow-gold:    0 0 30px rgba(200, 168, 75, 0.15);
+
+  /* Motion — respects prefers-reduced-motion (see bottom of file) */
+  --transition-fast: 0.2s ease;
+  --transition-med:  0.3s ease;
+
+  /* Reading font-size scale — controlled by the A-/A+ buttons on
+     chapter pages via JS, saved per-reader in localStorage */
+  --reading-scale: 1;
+}
+
+/* ── RESET & BASE ── */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+html { font-size: 18px; scroll-behavior: smooth; }
+
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: var(--font-body);
+  font-weight: 300;
+  line-height: 1.7;
+  min-height: 100vh;
+  overflow-x: hidden;
+  /* subtle noise texture */
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='300' height='300'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='300' height='300' filter='url(%23n)' opacity='0.025'/%3E%3C/svg%3E");
+}
+
+a { color: var(--gold); text-decoration: none; }
+a:hover { color: var(--gold-light); }
+
+img { max-width: 100%; display: block; }
+
+::selection { background: var(--gold-dim); color: var(--text); }
+
+/* ═══════════════════════════════════════════════════════════
+   ANIMATION SYSTEM
+   Kept slow and atmospheric on purpose — this is a reading site,
+   not a game. Nothing here should compete with the prose for
+   attention. Everything respects prefers-reduced-motion (see the
+   ACCESSIBILITY block above, which disables all of this at once
+   for readers who've asked their OS to reduce motion).
+   ═══════════════════════════════════════════════════════════ */
+
+@keyframes emberRise {
+  0%   { transform: translateY(0) translateX(0); opacity: 0; }
+  8%   { opacity: var(--ember-opacity, 0.7); }
+  85%  { opacity: var(--ember-opacity, 0.7); }
+  100% { transform: translateY(-140px) translateX(var(--drift, 12px)); opacity: 0; }
+}
+
+@keyframes kenBurns {
+  from { transform: scale(1); }
+  to   { transform: scale(1.1); }
+}
+
+@keyframes revealUp {
+  from { opacity: 0; transform: translateY(26px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes diamondPop {
+  from { transform: rotate(45deg) scale(0); opacity: 0; }
+  to   { transform: rotate(45deg) scale(1); opacity: 1; }
+}
+
+@keyframes barShimmer {
+  0%, 100% { box-shadow: 0 0 8px var(--gold); }
+  50%      { box-shadow: 0 0 18px var(--gold-light), 0 0 4px var(--gold); }
+}
+
+/* ── Ember particles ──
+   A handful of small embers drifting upward through a dark
+   section. JS (spawnEmbers in app.js) generates the individual
+   .ember divs with randomized position/timing so no two loops
+   look identical; this just defines how each one behaves. */
+.ember-field {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  pointer-events: none;
+  z-index: 1;
+}
+.ember {
+  position: absolute;
+  bottom: -6%;
+  width: 3px;
+  height: 3px;
+  border-radius: 50%;
+  background: var(--gold-light);
+  box-shadow: 0 0 6px 1px var(--gold);
+  opacity: 0;
+  animation-name: emberRise;
+  animation-timing-function: linear;
+  animation-iteration-count: infinite;
+}
+
+/* ── Scroll-reveal ──
+   Applied by JS (initScrollReveal) to book cards and chapter
+   rows: they start hidden/offset and settle into place as they
+   enter the viewport, staggered slightly via --reveal-i. */
+.reveal-item {
+  opacity: 0;
+  transform: translateY(24px);
+}
+/* Stagger delay only applies while waiting to reveal — once .in-view is
+   added this stops matching, so hover/etc. afterward stay instant rather
+   than inheriting a leftover page-load delay */
+.reveal-item:not(.in-view) {
+  transition-delay: calc(var(--reveal-i, 0) * 70ms);
+}
+.reveal-item.in-view {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* ── Cinematic slow zoom for large static images ──
+   Used on story hero banners and chapter cover images — a very
+   slow, subtle scale that reads as "alive" without ever looking
+   like a GIF. Paused automatically under reduced-motion. */
+.ken-burns {
+  animation: kenBurns 24s ease-out forwards;
+}
+/* ── LABEL FONT ──
+   All the small uppercase/letter-spaced labels (eyebrows, tags,
+   meta labels, badges, nav text) share one accent font so they
+   read as a consistent "system" across every page. Buttons and
+   the splash tagline intentionally keep the display serif instead
+   — this list is only the structural/meta text. */
+.splash-sub, .modal-eyebrow, .modal-skip, .brand-small, .hero-eyebrow,
+.cover-placeholder, .book-badge, .story-hero-cover-placeholder,
+.story-back, .story-tag, .story-meta-label, .chapter-entry.current::after,
+.chapter-nav-home, .nav-btn, .chapter-cover-placeholder,
+.chapter-story-name, .end-nav-label, .chapter-thumb-placeholder {
+  font-family: var(--font-label);
+}
+
+/* ── SCROLLBAR ── */
+::-webkit-scrollbar { width: 6px; }
+::-webkit-scrollbar-track { background: var(--bg); }
+::-webkit-scrollbar-thumb { background: var(--gold-dim); border-radius: 3px; }
+
+/* ── ACCESSIBILITY: FOCUS STATES ──
+   Every interactive element gets a visible gold ring when reached
+   by keyboard (Tab). Mouse/touch clicks don't show it, so it never
+   clutters the visual design — only keyboard users see it. */
+a:focus-visible,
+button:focus-visible,
+input:focus-visible,
+.book-btn:focus-visible,
+.chapter-entry:focus-visible,
+.nav-btn:focus-visible {
+  outline: 2px solid var(--gold);
+  outline-offset: 3px;
+  border-radius: 2px;
+}
+.modal-input:focus-visible { outline: none; } /* already has its own gold underline state */
+
+/* ── ACCESSIBILITY: SKIP TO CONTENT ──
+   Invisible until a keyboard user tabs to it — lets them jump
+   straight to the chapter list / story content, bypassing the
+   splash screen and header on every page. */
+.skip-link {
+  position: absolute;
+  top: -3rem;
+  left: 1rem;
+  z-index: 1200;
+  background: var(--gold);
+  color: var(--bg);
+  padding: 0.7em 1.4em;
+  font-family: var(--font-label);
+  font-size: 0.8rem;
+  letter-spacing: 0.05em;
+  border-radius: var(--radius);
+  transition: top var(--transition-fast);
+}
+.skip-link:focus { top: 1rem; }
+
+/* ── ACCESSIBILITY: REDUCED MOTION ──
+   Readers who set "reduce motion" in their OS get near-instant
+   transitions instead of the splash/fade/scroll animations. */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+
+/* ═══════════════════════════════════════════════════════════
+   SPLASH SCREEN
+   ═══════════════════════════════════════════════════════════ */
+.splash {
+  position: fixed;
+  inset: 0;
+  z-index: 1000;
+  background: var(--bg);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: opacity 0.9s ease, visibility 0.9s ease;
+}
+.splash.fade-out { opacity: 0; visibility: hidden; pointer-events: none; }
+
+.splash-inner {
+  text-align: center;
+  animation: splashReveal 1.2s ease forwards;
+  position: relative;
+  z-index: 2;
+}
+@keyframes splashReveal {
+  from { opacity: 0; transform: translateY(18px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+.splash-tagline {
+  font-family: var(--font-display);
+  font-size: clamp(0.85rem, 1.5vw, 1rem);
+  font-style: italic;
+  font-weight: 300;
+  letter-spacing: 0.3em;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  margin-bottom: 0.4em;
+  animation: fadeUp 1s 0.3s ease both;
+}
+
+.splash-title {
+  font-family: var(--font-display);
+  font-size: clamp(3.5rem, 10vw, 7rem);
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  color: var(--text);
+  line-height: 1;
+  text-shadow: 0 0 60px rgba(200, 168, 75, 0.2);
+  animation: fadeUp 1s 0.5s ease both;
+}
+
+.splash-line {
+  width: 120px;
+  height: 1px;
+  background: linear-gradient(to right, transparent, var(--gold), transparent);
+  margin: 1.5em auto;
+  animation: lineExpand 1s 0.9s ease both;
+}
+@keyframes lineExpand {
+  from { width: 0; opacity: 0; }
+  to   { width: 120px; opacity: 1; }
+}
+
+.splash-sub {
+  font-size: 0.75rem;
+  letter-spacing: 0.35em;
+  text-transform: uppercase;
+  color: var(--text-dim);
+  animation: fadeUp 1s 1.1s ease both;
+}
+
+/* Decorative corner ornaments on splash */
+.splash::before, .splash::after {
+  content: '';
+  position: absolute;
+  width: 180px;
+  height: 180px;
+  border: 1px solid var(--border-gold);
+  pointer-events: none;
+}
+.splash::before { top: 40px; left: 40px; border-right: none; border-bottom: none; }
+.splash::after  { bottom: 40px; right: 40px; border-left: none; border-top: none; }
+
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(14px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+
+/* ═══════════════════════════════════════════════════════════
+   NAME MODAL
+   ═══════════════════════════════════════════════════════════ */
+.modal-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 900;
+  background: rgba(8, 7, 10, 0.92);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 2rem;
+  opacity: 1;
+  transition: opacity 0.6s ease;
+}
+.modal-overlay.hidden { display: none; }
+.modal-overlay.fade-out { opacity: 0; pointer-events: none; }
+
+.modal-box {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  padding: 3rem 3.5rem;
+  max-width: 460px;
+  width: 100%;
+  text-align: center;
+  position: relative;
+  animation: modalIn 0.5s ease;
+}
+@keyframes modalIn {
+  from { opacity: 0; transform: scale(0.95) translateY(20px); }
+  to   { opacity: 1; transform: scale(1) translateY(0); }
+}
+
+/* Gold corner decorations on modal */
+.modal-box::before, .modal-box::after,
+.modal-box .modal-corner-bl, .modal-box .modal-corner-tr {
+  content: '';
+  position: absolute;
+  width: 24px; height: 24px;
+  border-color: var(--gold-dim);
+  border-style: solid;
+}
+.modal-box::before { top: 10px; left: 10px; border-width: 1px 0 0 1px; }
+.modal-box::after  { bottom: 10px; right: 10px; border-width: 0 1px 1px 0; }
+.modal-corner-bl   { bottom: 10px; left: 10px; border-width: 0 0 1px 1px; }
+.modal-corner-tr   { top: 10px; right: 10px; border-width: 1px 1px 0 0; }
+
+.modal-eyebrow {
+  font-size: 0.7rem;
+  letter-spacing: 0.35em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+  margin-bottom: 0.8em;
+}
+
+.modal-question {
+  font-family: var(--font-display);
+  font-size: clamp(1.6rem, 3.5vw, 2.2rem);
+  font-weight: 600;
+  font-style: italic;
+  color: var(--text);
+  line-height: 1.3;
+  margin-bottom: 1.8em;
+}
+
+.modal-input {
+  width: 100%;
+  background: transparent;
+  border: none;
+  border-bottom: 1px solid var(--border-gold);
+  padding: 0.6em 0;
+  color: var(--text);
+  font-family: var(--font-display);
+  font-size: 1.1rem;
+  font-style: italic;
+  text-align: center;
+  letter-spacing: 0.05em;
+  outline: none;
+  margin-bottom: 2em;
+  transition: border-color 0.3s;
+}
+.modal-input::placeholder { color: var(--text-dim); }
+.modal-input:focus { border-color: var(--gold); }
+
+.modal-btn {
+  display: inline-block;
+  padding: 0.8em 2.5em;
+  border: 1px solid var(--gold-dim);
+  background: transparent;
+  color: var(--gold);
+  font-family: var(--font-display);
+  font-size: 0.9rem;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: all 0.3s;
+}
+.modal-btn:hover {
+  background: var(--gold);
+  color: var(--bg);
+  border-color: var(--gold);
+}
+.modal-skip {
+  display: block;
+  margin-top: 1.2em;
+  font-size: 0.72rem;
+  letter-spacing: 0.15em;
+  color: var(--text-dim);
+  cursor: pointer;
+  background: none;
+  border: none;
+  text-transform: uppercase;
+  transition: color 0.2s;
+}
+.modal-skip:hover { color: var(--text-muted); }
+
+
+/* ═══════════════════════════════════════════════════════════
+   MAIN SITE — HEADER
+   ═══════════════════════════════════════════════════════════ */
+.site-header {
+  border-bottom: 1px solid var(--border);
+  padding: 1.8rem 0;
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  background: rgba(8, 7, 10, 0.96);
+  backdrop-filter: blur(10px);
+}
+
+.header-inner {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 2rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+}
+
+.header-brand a { text-decoration: none; }
+.brand-small {
+  display: block;
+  font-size: 0.65rem;
+  letter-spacing: 0.4em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+  margin-bottom: 0.1em;
+}
+.brand-title {
+  font-family: var(--font-display);
+  font-size: clamp(1.4rem, 3vw, 2rem);
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  color: var(--text);
+  line-height: 1;
+}
+
+.header-greeting {
+  font-family: var(--font-display);
+  font-style: italic;
+  font-size: 0.95rem;
+  color: var(--text-muted);
+}
+.header-greeting .greeting-name { color: var(--gold); }
+
+
+/* ═══════════════════════════════════════════════════════════
+   MAIN SITE — HERO BANNER
+   ═══════════════════════════════════════════════════════════ */
+.site-hero {
+  text-align: center;
+  padding: 5rem 2rem 4rem;
+  position: relative;
+  overflow: hidden;
+}
+.site-hero::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 50%;
+  transform: translateX(-50%);
+  width: 1px;
+  height: 60px;
+  background: linear-gradient(to bottom, transparent, var(--border-gold));
+}
+
+.hero-eyebrow {
+  animation: revealUp 0.8s 0.1s ease both;
+  font-size: 0.7rem;
+  letter-spacing: 0.4em;
+  text-transform: uppercase;
+  color: var(--gold-dim);
+  margin-bottom: 1.2em;
+}
+.hero-title {
+  animation: revealUp 0.9s 0.25s ease both;
+  font-family: var(--font-display);
+  font-size: clamp(2.5rem, 7vw, 5rem);
+  font-weight: 300;
+  font-style: italic;
+  color: var(--text);
+  line-height: 1.15;
+  margin-bottom: 0.6em;
+}
+.hero-subtitle {
+  animation: revealUp 0.9s 0.4s ease both;
+  font-size: clamp(0.85rem, 1.5vw, 1rem);
+  color: var(--text-muted);
+  max-width: 480px;
+  margin: 0 auto;
+}
+.hero-ornament {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 1rem;
+  margin: 2.5rem auto 0;
+  animation: revealUp 0.8s 0.6s ease both;
+}
+.hero-ornament span { display: block; }
+.hero-ornament .line {
+  width: 60px;
+  height: 1px;
+  background: var(--border-gold);
+}
+.hero-ornament .diamond {
+  width: 6px; height: 6px;
+  background: var(--gold-dim);
+  transform: rotate(45deg);
+  animation: diamondPop 0.5s 0.9s ease both;
+}
+/* Keep hero text above the ember-field particle layer (z-index: 1) */
+.hero-eyebrow, .hero-title, .hero-subtitle, .hero-ornament {
+  position: relative;
+  z-index: 2;
+}
+
+
+/* ═══════════════════════════════════════════════════════════
+   BOOKS GRID
+   ═══════════════════════════════════════════════════════════ */
+.library-section {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 3rem 2rem 6rem;
+}
+
+.section-header {
+  display: flex;
+  align-items: baseline;
+  gap: 1.5rem;
+  margin-bottom: 0.5rem;
+}
+.section-title {
+  font-family: var(--font-display);
+  font-size: clamp(1.6rem, 3vw, 2.2rem);
+  font-weight: 600;
+  letter-spacing: 0.05em;
+  color: var(--text);
+}
+.section-divider {
+  flex: 1;
+  height: 1px;
+  background: var(--border);
+}
+.section-sub {
+  font-size: 0.85rem;
+  color: var(--text-dim);
+  letter-spacing: 0.05em;
+  margin-bottom: 3rem;
+}
+
+.books-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap: 2.5rem 2rem;
+}
+
+/* ── BOOK CARD ── */
+.book-card {
+  display: flex;
+  flex-direction: column;
+  transition: transform 0.3s ease, opacity 0.6s ease;
+}
+.book-card:hover { transform: translateY(-4px); }
+
+.book-cover-wrap {
+  position: relative;
+  aspect-ratio: 2 / 3;
+  overflow: hidden;
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  margin-bottom: 1rem;
+  flex-shrink: 0;
+  transition: border-color 0.3s, box-shadow 0.3s;
+}
+.book-card:hover .book-cover-wrap {
+  border-color: var(--border-gold);
+  box-shadow: 0 8px 28px rgba(0,0,0,0.5), 0 0 24px rgba(200, 168, 75, 0.12);
+}
+
+.book-cover-wrap img {
+  width: 100%; height: 100%;
+  object-fit: cover;
+  display: block;
+  transition: transform 0.5s ease;
+}
+.book-card:hover .book-cover-wrap img { transform: scale(1.03); }
+
+.cover-placeholder {
+  display: none; /* shown by JS onerror or always for WIP */
+  width: 100%; height: 100%;
+  align-items: center;
+  justify-content: center;
+  background: var(--bg-elevated);
+  border: 1px dashed var(--border);
+  text-align: center;
+  font-size: 0.75rem;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--text-dim);
+  line-height: 1.6;
+}
+.cover-placeholder.always { display: flex; }
+
+.book-badge {
+  position: absolute;
+  bottom: 10px; right: 10px;
+  font-size: 0.6rem;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  padding: 0.3em 0.7em;
+  background: var(--crimson);
+  color: #fff;
+}
+.book-badge.wip {
+  background: transparent;
+  border: 1px solid var(--text-dim);
+  color: var(--text-dim);
+}
+
+.book-info { display: flex; flex-direction: column; gap: 0.5rem; }
+
+.book-title {
+  font-family: var(--font-display);
+  font-size: 1.1rem;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  color: var(--text);
+  line-height: 1.3;
+}
+
+.book-desc {
+  font-size: 0.82rem;
+  color: var(--text-muted);
+  line-height: 1.6;
+  flex: 1;
+}
+
+.book-progress {
+  font-size: 0.7rem;
+  letter-spacing: 0.1em;
+  color: var(--gold-dim);
+  margin-bottom: 0.3rem;
+}
+
+.book-btn {
+  display: inline-block;
+  margin-top: 0.5rem;
+  padding: 0.55em 1.2em;
+  border: 1px solid var(--gold-dim);
+  color: var(--gold);
+  font-family: var(--font-display);
+  font-size: 0.78rem;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  text-align: center;
+  cursor: pointer;
+  transition: all 0.25s;
+  background: transparent;
+}
+.book-btn:hover { background: var(--gold); color: var(--bg); border-color: var(--gold); box-shadow: 0 0 22px rgba(200, 168, 75, 0.35); }
+.book-btn.disabled {
+  border-color: var(--border);
+  color: var(--text-dim);
+  cursor: not-allowed;
+}
+.book-btn.disabled:hover { background: transparent; color: var(--text-dim); border-color: var(--border); box-shadow: none; }
+
+
+/* ═══════════════════════════════════════════════════════════
+   FOOTER
+   ═══════════════════════════════════════════════════════════ */
+.site-footer {
+  border-top: 1px solid var(--border);
+  padding: 2rem;
+  text-align: center;
+  font-size: 0.75rem;
+  letter-spacing: 0.12em;
+  color: var(--text-dim);
+}
+
+
+/* ═══════════════════════════════════════════════════════════
+   STORY INDEX PAGE
+   ═══════════════════════════════════════════════════════════ */
+.story-hero {
+  position: relative;
+  min-height: 420px;
+  display: flex;
+  align-items: flex-end;
+  overflow: hidden;
+}
+
+.story-hero-cover {
+  position: absolute;
+  inset: 0;
+  background: var(--bg-card);
+}
+.story-hero-cover img {
+  width: 100%; height: 100%;
+  object-fit: cover;
+  opacity: 0.4;
+  animation: kenBurns 24s ease-out forwards;
+}
+.story-hero-cover-placeholder {
+  width: 100%; height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--bg-elevated);
+  font-size: 0.8rem;
+  letter-spacing: 0.25em;
+  text-transform: uppercase;
+  color: var(--text-dim);
+}
+.story-hero-overlay {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(to top, var(--bg) 0%, rgba(8,7,10,0.4) 60%, transparent 100%);
+}
+.story-hero-content {
+  position: relative;
+  z-index: 2;
+  padding: 3rem 2rem;
+  max-width: 1100px;
+  margin: 0 auto;
+  width: 100%;
+}
+
+.story-back {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5em;
+  font-size: 0.72rem;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+  margin-bottom: 2rem;
+  transition: color 0.2s;
+  animation: revealUp 0.7s 0.1s ease both;
+}
+.story-back:hover { color: var(--gold); }
+.story-back::before { content: '←'; display: inline-block; transition: transform 0.2s; }
+.story-back:hover::before { transform: translateX(-3px); }
+
+.story-tag {
+  font-size: 0.65rem;
+  letter-spacing: 0.35em;
+  text-transform: uppercase;
+  color: var(--gold-dim);
+  margin-bottom: 0.5em;
+  animation: revealUp 0.7s 0.2s ease both;
+}
+.story-headline {
+  font-family: var(--font-display);
+  font-size: clamp(2.5rem, 6vw, 4.5rem);
+  font-weight: 700;
+  letter-spacing: 0.03em;
+  color: var(--text);
+  line-height: 1.1;
+  margin-bottom: 0.6em;
+  animation: revealUp 0.9s 0.32s ease both;
+}
+.story-tagline {
+  font-family: var(--font-display);
+  font-style: italic;
+  font-size: clamp(1rem, 2vw, 1.3rem);
+  font-weight: 300;
+  color: var(--text-muted);
+  max-width: 560px;
+  animation: revealUp 0.9s 0.46s ease both;
+}
+
+.story-meta {
+  display: flex;
+  gap: 2rem;
+  margin-top: 1.5rem;
+  flex-wrap: wrap;
+  animation: revealUp 0.9s 0.6s ease both;
+}
+.story-meta-item {
+  display: flex;
+  flex-direction: column;
+  gap: 0.2em;
+}
+.story-meta-label {
+  font-size: 0.62rem;
+  letter-spacing: 0.3em;
+  text-transform: uppercase;
+  color: var(--text-dim);
+}
+.story-meta-value {
+  font-family: var(--font-display);
+  font-size: 1rem;
+  color: var(--text-muted);
+}
+
+/* ── CONTINUE READING BANNER ── */
+.continue-banner {
+  background: var(--bg-elevated);
+  border: 1px solid var(--border-gold);
+  border-left: 3px solid var(--gold);
+  padding: 1.2rem 2rem;
+  max-width: 1100px;
+  margin: 0 auto;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  flex-wrap: wrap;
+}
+.continue-text {
+  font-family: var(--font-display);
+  font-style: italic;
+  font-size: 1rem;
+  color: var(--text-muted);
+}
+.continue-text strong { color: var(--gold); font-style: normal; font-weight: 600; }
+
+.btn-continue {
+  display: inline-block;
+  padding: 0.6em 1.8em;
+  background: var(--gold);
+  color: var(--bg);
+  font-family: var(--font-display);
+  font-size: 0.8rem;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  white-space: nowrap;
+  transition: background 0.2s, box-shadow 0.3s, transform 0.2s;
+}
+.btn-continue:hover { background: var(--gold-light); color: var(--bg); box-shadow: 0 0 24px rgba(200, 168, 75, 0.45); transform: translateY(-2px); }
+
+/* ── CHAPTERS LIST ── */
+.chapters-section {
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 3rem 2rem 5rem;
+}
+
+.chapters-list {
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+  border: 1px solid var(--border);
+}
+
+.chapter-entry {
+  display: flex;
+  align-items: center;
+  gap: 1.5rem;
+  padding: 1.2rem 1.5rem;
+  background: var(--bg-card);
+  border-bottom: 1px solid var(--border);
+  text-decoration: none;
+  transition: background 0.2s, opacity 0.6s ease, transform 0.5s ease;
+  position: relative;
+  overflow: hidden;
+}
+.chapter-entry:last-child { border-bottom: none; }
+.chapter-entry:hover { background: var(--bg-elevated); }
+.chapter-entry.current { border-left: 3px solid var(--gold); }
+.chapter-entry.current::after {
+  content: 'Last Read';
+  position: absolute;
+  right: 1.5rem;
+  font-size: 0.6rem;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--gold-dim);
+}
+
+/* Chapter thumbnail (optional per chapter) */
+.chapter-thumb {
+  width: 52px;
+  height: 70px;
+  flex-shrink: 0;
+  overflow: hidden;
+  background: var(--bg-elevated);
+  border: 1px solid var(--border);
+}
+.chapter-thumb img { width: 100%; height: 100%; object-fit: cover; }
+.chapter-thumb-placeholder {
+  width: 100%; height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.65rem;
+  color: var(--text-dim);
+  text-align: center;
+  line-height: 1.3;
+}
+
+.chapter-num {
+  font-family: var(--font-display);
+  font-size: 1.8rem;
+  font-weight: 300;
+  color: var(--border);
+  min-width: 48px;
+  line-height: 1;
+}
+.chapter-entry:hover .chapter-num { color: var(--text-dim); }
+
+.chapter-details { flex: 1; min-width: 0; }
+.chapter-title {
+  font-family: var(--font-display);
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: var(--text);
+  margin-bottom: 0.2em;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.chapter-excerpt {
+  font-size: 0.82rem;
+  color: var(--text-muted);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.chapter-arrow {
+  color: var(--text-dim);
+  font-size: 1rem;
+  transition: transform 0.2s, color 0.2s;
+}
+.chapter-entry:hover .chapter-arrow { transform: translateX(4px); color: var(--gold); }
+
+
+/* ═══════════════════════════════════════════════════════════
+   CHAPTER READER PAGE
+   ═══════════════════════════════════════════════════════════ */
+/* ── Reading Progress Bar (top of page) ── */
+.reading-bar {
+  position: fixed;
+  top: 0; left: 0;
+  height: 2px;
+  background: var(--gold);
+  width: 0%;
+  z-index: 200;
+  transition: width 0.1s linear;
+  box-shadow: 0 0 8px var(--gold);
+  animation: barShimmer 3s ease-in-out infinite;
+}
+
+/* ── Chapter Nav Bar ── */
+.chapter-nav {
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  background: rgba(8, 7, 10, 0.96);
+  backdrop-filter: blur(10px);
+  border-bottom: 1px solid var(--border);
+  padding: 0.8rem 2rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+}
+.chapter-nav-home {
+  font-size: 0.7rem;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+  transition: color 0.2s;
+}
+.chapter-nav-home:hover { color: var(--gold); }
+
+.chapter-nav-title {
+  font-family: var(--font-display);
+  font-style: italic;
+  font-size: 0.9rem;
+  color: var(--text-muted);
+  text-align: center;
+  flex: 1;
+}
+
+.chapter-nav-pages {
+  display: flex;
+  gap: 0.5rem;
+}
+.nav-btn {
+  padding: 0.4em 0.9em;
+  min-height: 44px;               /* comfortable tap target on touch devices */
+  display: inline-flex;
+  align-items: center;
+  border: 1px solid var(--border);
+  color: var(--text-muted);
+  font-size: 0.72rem;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  transition: all 0.2s;
+  background: transparent;
+  cursor: pointer;
+  white-space: nowrap;
+}
+.nav-btn:hover { border-color: var(--gold-dim); color: var(--gold); }
+.nav-btn.disabled { opacity: 0.3; pointer-events: none; }
+
+/* ── Chapter Cover Image ── */
+.chapter-cover {
+  width: 100%;
+  aspect-ratio: 21 / 9;   /* reserves the space up front so the page doesn't jump while the image loads */
+  max-height: 420px;
+  overflow: hidden;
+  position: relative;
+  background: var(--bg-elevated);
+}
+.chapter-cover img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+  animation: kenBurns 24s ease-out forwards;
+}
+.chapter-cover-placeholder {
+  min-height: 180px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--bg-elevated);
+  border-bottom: 1px solid var(--border);
+  font-size: 0.75rem;
+  letter-spacing: 0.25em;
+  text-transform: uppercase;
+  color: var(--text-dim);
+}
+.chapter-cover-overlay {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(to top, var(--bg) 0%, transparent 60%);
+}
+
+/* ── Chapter Content ── */
+.chapter-container {
+  max-width: 680px;
+  margin: 0 auto;
+  padding: 3rem 2rem 5rem;
+}
+
+.chapter-header {
+  margin-bottom: 3rem;
+  border-left: 2px solid var(--crimson);
+  padding-left: 1.5rem;
+}
+.chapter-story-name {
+  font-size: 0.68rem;
+  letter-spacing: 0.3em;
+  text-transform: uppercase;
+  color: var(--text-dim);
+  margin-bottom: 0.4em;
+}
+.chapter-number {
+  font-family: var(--font-display);
+  font-size: 0.9rem;
+  font-weight: 300;
+  letter-spacing: 0.15em;
+  color: var(--gold-dim);
+  margin-bottom: 0.2em;
+}
+.chapter-heading {
+  font-family: var(--font-display);
+  font-size: clamp(2rem, 5vw, 3rem);
+  font-weight: 700;
+  color: var(--text);
+  line-height: 1.2;
+}
+
+/* ── Chapter Prose ── */
+.chapter-body {
+  font-family: var(--font-body);
+  font-size: calc(1.05rem * var(--reading-scale));  /* scaled by the A-/A+ control */
+  line-height: 1.9;
+  color: var(--text);
+}
+
+.chapter-body p { margin-bottom: 1.5em; }
+
+.chapter-body p:first-of-type::first-letter {
+  font-family: var(--font-display);
+  font-size: 4.5em;
+  font-weight: 700;
+  float: left;
+  line-height: 0.75;
+  margin-right: 0.1em;
+  margin-top: 0.1em;
+  color: var(--gold);
+}
+
+.chapter-body h2 {
+  font-family: var(--font-display);
+  font-size: 1.5rem;
+  font-weight: 600;
+  color: var(--text);
+  margin: 2.5em 0 1em;
+}
+
+.chapter-body em { color: var(--text-muted); }
+
+.chapter-body blockquote {
+  border-left: 2px solid var(--gold-dim);
+  padding: 0.5em 0 0.5em 1.5em;
+  margin: 2em 0;
+  font-style: italic;
+  color: var(--text-muted);
+}
+
+.chapter-separator {
+  text-align: center;
+  margin: 3rem 0;
+  color: var(--gold-dim);
+  letter-spacing: 0.5em;
+}
+
+/* ── Chapter End Navigation ── */
+.chapter-end-nav {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  margin-top: 4rem;
+  padding-top: 2rem;
+  border-top: 1px solid var(--border);
+}
+.end-nav-btn {
+  display: flex;
+  flex-direction: column;
+  gap: 0.2em;
+}
+.end-nav-btn.next { text-align: right; }
+.end-nav-label {
+  font-size: 0.65rem;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--text-dim);
+}
+.end-nav-title {
+  font-family: var(--font-display);
+  font-size: 1rem;
+  color: var(--gold);
+  transition: color 0.2s;
+}
+.end-nav-title:hover { color: var(--gold-light); }
+.end-nav-center { color: var(--text-dim); font-size: 1.2rem; }
+
+
+/* ═══════════════════════════════════════════════════════════
+   READING SETTINGS — font-size control on chapter pages
+   Sits in the top nav bar. Preference is saved per-device via
+   localStorage (see app.js → KEY_FONT_SCALE) so it persists
+   across chapters and future visits.
+   ═══════════════════════════════════════════════════════════ */
+.reading-settings {
+  display: flex;
+  align-items: center;
+  gap: 2px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  overflow: hidden;
+}
+.font-size-btn {
+  min-width: 44px;
+  min-height: 44px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: transparent;
+  border: none;
+  color: var(--text-muted);
+  cursor: pointer;
+  font-family: var(--font-label);
+  font-size: 0.95rem;
+  line-height: 1;
+  transition: background var(--transition-fast), color var(--transition-fast);
+}
+.font-size-btn:hover { background: var(--bg-elevated); color: var(--gold); }
+.font-size-btn:active { background: var(--gold-dim); color: var(--bg); }
+.font-size-btn.decrease { font-size: 0.7rem; }
+.font-size-btn.increase { font-size: 1.15rem; }
+
+/* ── Reading meta (word count + est. reading time) ── */
+.reading-meta {
+  font-family: var(--font-label);
+  font-size: 0.68rem;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: var(--text-dim);
+  margin-top: 0.6em;
+}
+.reading-meta .dot { margin: 0 0.6em; opacity: 0.5; }
+
+/* ═══════════════════════════════════════════════════════════
+   BACK TO TOP — appears after scrolling past one screen height
+   on long chapter pages
+   ═══════════════════════════════════════════════════════════ */
+.back-to-top {
+  position: fixed;
+  right: 1.5rem;
+  bottom: 1.5rem;
+  width: 48px;
+  height: 48px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--bg-card);
+  border: 1px solid var(--border-gold);
+  color: var(--gold);
+  border-radius: 50%;
+  cursor: pointer;
+  z-index: 150;
+  opacity: 0;
+  visibility: hidden;
+  transform: translateY(8px);
+  transition: opacity var(--transition-med), transform var(--transition-med), visibility var(--transition-med), background var(--transition-fast);
+  box-shadow: 0 4px 16px rgba(0,0,0,0.4);
+}
+.back-to-top.visible { opacity: 1; visibility: visible; transform: translateY(0); }
+.back-to-top:hover { background: var(--gold); color: var(--bg); }
+.back-to-top svg { width: 20px; height: 20px; }
+
+@media (max-width: 480px) {
+  .back-to-top { right: 1rem; bottom: 1rem; width: 44px; height: 44px; }
+}
+
+
+/* ═══════════════════════════════════════════════════════════
+   UTILITY CLASSES
+   ═══════════════════════════════════════════════════════════ */
+.hidden { display: none !important; }
+
+.page-animate {
+  animation: fadeUp 0.6s ease both;
+}
+
+
+/* ═══════════════════════════════════════════════════════════
+   RESPONSIVE
+   ═══════════════════════════════════════════════════════════ */
+@media (max-width: 768px) {
+  .books-grid { grid-template-columns: repeat(2, 1fr); gap: 1.5rem 1rem; }
+  .splash::before, .splash::after { width: 80px; height: 80px; top: 20px; left: 20px; bottom: 20px; right: 20px; }
+  .modal-box { padding: 2rem 1.5rem; }
+  .chapter-nav-title { display: none; }
+  .chapter-end-nav { flex-direction: column; align-items: flex-start; }
+  .end-nav-btn.next { text-align: left; }
+  .story-meta { gap: 1rem; }
+}
+@media (max-width: 440px) {
+  .books-grid { grid-template-columns: 1fr; }
+  .chapter-nav { padding: 0.6rem 1rem; gap: 0.5rem; flex-wrap: wrap; justify-content: center; }
+  .chapter-nav-pages { gap: 0.35rem; }
+  .nav-btn { padding: 0.4em 0.6em; font-size: 0.65rem; }
+  .back-to-top { right: 0.75rem; bottom: 0.75rem; }
+}
